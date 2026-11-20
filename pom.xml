@@ -7,6 +7,10 @@
     <groupId>com.practice</groupId>
     <artifactId>PlayWrightAutomation</artifactId>
     <version>1.0-SNAPSHOT</version>
+
+
+
+
     <dependencies>
 
         <dependency>

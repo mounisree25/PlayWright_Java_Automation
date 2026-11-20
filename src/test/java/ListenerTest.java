@@ -12,19 +12,19 @@ public class ListenerTest extends BaseTest {
     @Test
     public void successfulTest() {
 
-        page.navigate("https://www.saucedemo.com/");
+        getPage().navigate("https://www.saucedemo.com/");
 
-        assertTrue(page.title().contains("Swag Labs"));
+        assertTrue(getPage().title().contains("Swag Labs"));
     }
 
     @Test
     public void failedTest() {
-        page.navigate("https://www.saucedemo.com/");
-        page.locator("#user-name").fill("Mounisree");
-        page.locator("#password").fill("Mouni@123");
-        page.locator("#login-button").click();
+        getPage().navigate("https://www.saucedemo.com/");
+        getPage().locator("#user-name").fill("Mounisree");
+        getPage().locator("#password").fill("Mouni@123");
+        getPage().locator("#login-button").click();
         assertTrue(
-                page.locator("[data-test='error']").isVisible() == false,
+                getPage().locator("[data-test='error']").isVisible() == false,
                 "Login unexpectedly failed"
         );
     }

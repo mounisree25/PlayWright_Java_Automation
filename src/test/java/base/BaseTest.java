@@ -1,3 +1,4 @@
+
 package base;
 
 import com.microsoft.playwright.*;
@@ -5,36 +6,61 @@ import org.testng.annotations.*;
 
 public class BaseTest {
 
-    protected Playwright playwright;
-    protected Browser browser;
-    protected Page page;
+    private static final ThreadLocal<Playwright> playwright =
+            new ThreadLocal<>();
+
+    private static final ThreadLocal<Browser> browser =
+            new ThreadLocal<>();
+
+    private static final ThreadLocal<Page> page =
+            new ThreadLocal<>();
 
     @BeforeMethod
     public void setup() {
 
-        playwright = Playwright.create();
+        Playwright pw = Playwright.create();
 
-        browser = playwright.chromium().launch(
+        Browser br = pw.chromium().launch(
                 new BrowserType.LaunchOptions()
                         .setHeadless(false)
         );
 
-        page = browser.newPage();
+        Page pg = br.newPage();
+
+        playwright.set(pw);
+        browser.set(br);
+        page.set(pg);
+
+        System.out.println(
+                "Browser started on thread: "
+                        + Thread.currentThread().getId()
+        );
     }
 
     public Page getPage() {
-        return page;
+        return page.get();
     }
 
     @AfterMethod
     public void tearDown() {
 
-        if (browser != null) {
-            browser.close();
-        }
+        try {
+            if (page.get() != null) {
+                page.get().close();
+            }
 
-        if (playwright != null) {
-            playwright.close();
+            if (browser.get() != null) {
+                browser.get().close();
+            }
+
+            if (playwright.get() != null) {
+                playwright.get().close();
+            }
+
+        } finally {
+            page.remove();
+            browser.remove();
+            playwright.remove();
         }
     }
 }
